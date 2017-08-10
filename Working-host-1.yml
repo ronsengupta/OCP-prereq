@@ -1,0 +1,52 @@
+---
+- hosts:  taco
+  tasks:
+
+        - name: install NetworkManager
+          yum: name=NetworkManager state=installed
+
+        - name: enable NetworkManager
+          service: name=NetworkManager enabled=true state=started
+
+        - name: Install required packages
+          yum:
+            name: "{{ item }}"
+            state: installed
+          with_items:
+            - wget
+            - git
+            - net-tools
+            - bind-utils
+            - iptables-services
+            - bridge-utils
+            - bash-completion
+            - kexec-tools
+            - sos
+            - psacct
+
+        - name: Atomic excluder
+          yum: name=atomic-openshift-excluder state=installed
+
+        - name: Docker excluder
+          yum: name=atomic-openshift-docker-excluder state=installed
+
+        - name: Unexclude
+          shell: atomic-openshift-excluder unexclude
+
+        - name: "Update the system"
+          yum: "state=latest name='*'"
+
+        - name: Install docker
+          yum: state=installed name='docker-1.12.6'
+
+        - name: Change docker storage
+          shell: echo "DEVS=/dev/sdb" > /etc/sysconfig/docker-storage-setup
+
+        - name: Add docker VG
+          shell: echo "VG=docker-vg" >> /etc/sysconfig/docker-storage-setup
+
+        - name: docker-storage-setup
+          shell: docker-storage-setup
+
+        - name: enable docker service
+          service: name=docker enabled=true state=started
