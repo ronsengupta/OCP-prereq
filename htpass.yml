@@ -1,0 +1,29 @@
+- hosts: masters
+
+  tasks:
+
+        - name: Install htpasswd
+
+          yum: state=installed name=httpd-tools
+
+
+
+        - name: ensure /tmp exists
+
+          file: path=/tmp state=directory
+
+
+
+        - name: checking if /tmp/htpasswd exists
+
+          stat: path=/tmp/htpasswd
+
+          register: p
+
+
+
+        - name: create developer user
+
+          shell: echo developer | htpasswd -i -c /tmp/htpasswd developer
+
+          when: p.stat.exists is not defined or not p.stat.exists
