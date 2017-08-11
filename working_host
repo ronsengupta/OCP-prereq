@@ -1,0 +1,65 @@
+[anssvc@ocpinsprd01 ~]$ cat /etc/ansible/hosts 
+[OSEv3:children]
+masters
+nodes
+etcd
+[OSEv3:vars]
+ansible_ssh_user=anssvc
+ansible_become=yes
+debug_level=2
+deployment_type=openshift-enterprise
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/users.htpasswd'}]
+
+openshift_master_cluster_method=native
+openshift_master_cluster_hostname=ocp-console.corp.bankbtpn.co.id
+openshift_master_cluster_public_hostname=ocp-console.corp.bankbtpn.co.id
+openshift_master_named_certificates=[{"certfile": "/home/anssvc/btpn.pem", "keyfile": "/home/anssvc/btpn.key", "names": ["ocp-console.corp.bankbtpn.co.id"], "cafile": "/home/anssvc/ca.cer"}]
+openshift_master_overwrite_named_certificates=true
+# default subdomain to use for exposed routes:
+osm_default_subdomain=apps.corp.bankbtpn.co.id
+
+#
+osm_default_node_selector='app=true' 
+osm_cluster_network_cidr='10.8.0.0/14'
+openshift_master_portal_net='172.65.0.0/16'
+# # host group for masters
+[masters]
+ocpmtrprd01.corp.bankbtpn.co.id
+ocpmtrprd02.corp.bankbtpn.co.id
+ocpmtrprd03.corp.bankbtpn.co.id
+ocpmtrdrc01.corp.bankbtpn.co.id
+ocpmtrdrc02.corp.bankbtpn.co.id
+# # host group for etcd
+[etcd]
+ocpmtrprd01.corp.bankbtpn.co.id
+ocpmtrprd02.corp.bankbtpn.co.id
+ocpmtrprd03.corp.bankbtpn.co.id
+ocpmtrdrc01.corp.bankbtpn.co.id
+ocpmtrdrc02.corp.bankbtpn.co.id
+# # Specify load balancer host
+#
+# # host group for nodes, includes region info
+[nodes]
+ocpmtrprd01.corp.bankbtpn.co.id
+ocpmtrprd02.corp.bankbtpn.co.id
+ocpmtrprd03.corp.bankbtpn.co.id
+ocpmtrdrc01.corp.bankbtpn.co.id
+ocpmtrdrc02.corp.bankbtpn.co.id
+ocpinfprd01.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'BTPN_OSE-DC', 'infra': 'true'}"
+ocpinfprd02.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'BTPN_OSE-DC', 'infra': 'true'}"
+ocpinfdrc01.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'BTPN_OSE-DR', 'infra': 'true'}"
+ocpinfdrc02.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'BTPN_OSE-DR', 'infra': 'true'}"
+ocplogprd01.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'LogDCa1', 'logmetric': 'true'}"
+ocplogprd02.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'LogDCa2', 'logmetric': 'true'}"
+ocplogprd03.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'LogDCa3', 'logmetric': 'true'}"
+ocplogdrc01.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'LogDCb1', 'logmetric': 'true'}"
+ocplogdrc02.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'LogDCb2', 'logmetric': 'true'}"
+ocpwkrprd01.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'App-DC1', 'app': 'true'}"
+ocpwkrprd02.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'App-DC1', 'app': 'true'}"
+ocpwkrprd03.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'App-DC1', 'app': 'true'}"
+ocpwkrprd04.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'App-DC1', 'app': 'true'}"
+ocpwkrprd05.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'App-DC1', 'app': 'true'}"
+ocpwkrprd06.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'App-DC1', 'app': 'true'}"
+ocpwkrdrc01.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'App-DC2', 'app': 'true'}"
+ocpwkrdrc02.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'App-DC2', 'app': 'true'}"
+ocpwkrdrc03.corp.bankbtpn.co.id openshift_node_labels="{'region': 'primary', 'zone':'App-DC2', 'app': 'true'}"
